@@ -270,7 +270,7 @@ const [clientData, setClientData] = useState(null);
       XLSX.utils.book_append_sheet(workbook, clientSheet, "Reporte de Cliente");
   
       // Generate and download the Excel file
-      XLSX.writeFile(workbook, "Reporte_Smash_Gym.xlsx");
+      XLSX.writeFile(workbook, "Reporte_Gym_Mania.xlsx");
     } catch (error) {
       console.error("Error generating Excel:", error);
     }

@@ -1,7 +1,7 @@
 import { useState, useContext } from 'react';
 import { Navigate } from "react-router-dom";
 import Login from '../components/Login';
-import logo from '../assets/logo2.jpg'
+import logo from '../assets/gymManiaLogo.jpeg'
 import { AuthContext } from '../utils/AuthContext';
 
 const WelcomePage = () => {
@@ -31,8 +31,9 @@ const WelcomePage = () => {
    <div className="flex flex-col items-center">
      <div className="flex items-center mb-4">
        <img
-         className="bg-gray-200 border-2 border-dashed rounded-xl w-45 h-40 mr-4"
+         className="rounded-xl w-40 h-40 object-contain mr-4"
          src={logo}
+         alt="Gym Mania"
        />
        <h1 className="text-6xl font-jaro text-[#3b3b41]">¡Bienvenido!</h1>
      </div>
