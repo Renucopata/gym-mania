@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import BackButton from "../components/BackButton";
 import axiosInstance from "../utils/AxiosInstance";
 import EmployeeEdit from "../components/EmployeeEdit";
 import EmployeeInfo from "../components/EmployeeInfo";
@@ -69,6 +70,25 @@ const EmployeesPage = () => {
   const closeAddShift = () => {setIsAddShiftOpen(false)};
   const closeDelete = () => {setIsDeleteOpen(false)};
 
+  // Toggle an employee's estado (activo <-> inactivo). This is a real DB change.
+  const toggleStatus = async (employee) => {
+    const newStatus = employee.estado === "activo" ? "inactivo" : "activo";
+    try {
+      await axiosInstance.put(`/auth/updateStatus/${employee.carnet_identidad}`, {
+        estado: newStatus,
+      });
+      setEmployees((prev) =>
+        prev.map((e) =>
+          e.carnet_identidad === employee.carnet_identidad
+            ? { ...e, estado: newStatus }
+            : e
+        )
+      );
+    } catch (error) {
+      console.error("Error updating employee status:", error);
+    }
+  };
+
 
   const filteredData = employees
     .filter((employee) => {
@@ -107,6 +127,7 @@ const EmployeesPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 flex justify-center items-center">
+      <BackButton />
       <div className="w-[90vw] h-[90vh] bg-gymmania-panel shadow-lg rounded-lg p-6">
         {/* Breadcrumbs */}
         <div className="font-jaro text-md text-black mb-4">
@@ -192,10 +213,8 @@ const EmployeesPage = () => {
                   <td className="p-2 border-b">
                     <span
                       className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                        employee.status === "estado"
+                        employee.estado === "activo"
                           ? "bg-green-100 text-green-800"
-                          : employee.status === "on leave"
-                          ? "bg-yellow-100 text-yellow-800"
                           : "bg-red-100 text-red-800"
                       }`}
                     >
@@ -217,6 +236,12 @@ const EmployeesPage = () => {
                               onClick={() => openAddShift(employee.carnet_identidad)}>
                                 <i class="fa-regular fa-calendar-plus"></i>
                       </button>
+                     { (userRole === "admin" || userRole === "sistemas")&&
+                      (<button className="mr-2"
+                              title={employee.estado === "activo" ? "Desactivar" : "Activar"}
+                              onClick={() => toggleStatus(employee)}>
+                                <i className={`fa-solid ${employee.estado === "activo" ? "fa-toggle-on text-green-600" : "fa-toggle-off text-gray-400"}`}></i>
+                      </button>)}
                      { (userRole === "admin" || userRole === "sistemas")&&
                       (<button className="mr-2 hover:text-gray-400"
                               onClick={() => openDelete(employee.carnet_identidad)}>

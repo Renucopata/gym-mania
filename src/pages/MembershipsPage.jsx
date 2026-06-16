@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import BackButton from "../components/BackButton";
 import axiosInstance from "../utils/AxiosInstance";
 import AddMemberModal from "../components/AddMemberModal";
 import MembershipsDetailsModal from "../components/MembershipsDetailModal";
@@ -73,6 +74,7 @@ const MembershipsPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 flex justify-center items-center">
+      <BackButton />
       <div className="w-[90vw] h-[90vh] bg-gymmania-panel shadow-lg rounded-lg p-6">
         {/* Breadcrumbs */}
         <div className="font-jaro text-md text-black mb-4">

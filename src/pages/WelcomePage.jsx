@@ -1,5 +1,5 @@
 import { useState, useContext } from 'react';
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import Login from '../components/Login';
 import logo from '../assets/gymManiaLogo.jpeg'
 import { AuthContext } from '../utils/AuthContext';
@@ -7,6 +7,8 @@ import { AuthContext } from '../utils/AuthContext';
 const WelcomePage = () => {
 
   const { isAuthenticated } = useContext(AuthContext);
+  const location = useLocation();
+  const authMessage = location.state?.authMessage;
 
   if (isAuthenticated) {
     return <Navigate to="/dashboard" />;
@@ -22,6 +24,11 @@ const WelcomePage = () => {
   return (
     <div
       className="h-screen w-screen flex justify-center items-center bg-gymmania-black">
+      {authMessage && (
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 bg-red-500 text-white font-jaro px-6 py-3 rounded-lg shadow-lg z-50 text-center">
+          {authMessage}
+        </div>
+      )}
       {showLogin ? (
         <Login setShowLogin={setShowLogin}></Login>
       ) : (

@@ -7,7 +7,10 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        jaro: ["Jaro", "sans-serif"],
+        // Brand/display font. Orbitron (free) stands in for the commercial
+        // Ethnocentric; rendered bold + slanted via index.css to mimic
+        // "Ethnocentric Bold Italic". Class name kept as `font-jaro`.
+        jaro: ["Orbitron", "sans-serif"],
       },
       colors: {
         gymmania: {

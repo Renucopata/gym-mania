@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import BackButton from "../components/BackButton";
 import { Chart as ChartJS, ArcElement, CategoryScale, LinearScale, BarElement, Tooltip, Legend } from "chart.js";
 import { Bar, Pie } from "react-chartjs-2";
 import axiosInstance from "../utils/AxiosInstance";
@@ -283,6 +284,7 @@ const [clientData, setClientData] = useState(null);
 
   return (
     <div className="min-h-screen bg-gymmania-black p-8">
+      <BackButton />
       <div className="max-w-7xl mx-auto bg-white shadow-lg rounded-lg p-6">
         <h1 className="text-3xl font-bold mb-6">Panel de Control</h1>
         <div className="flex justify-end mb-4">

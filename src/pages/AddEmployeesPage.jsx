@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import BackButton from "../components/BackButton";
 
 import axiosInstance from "../utils/AxiosInstance"; // Ensure this is correctly set up
 
@@ -67,7 +68,7 @@ const AddEmployeesPage = () => {
       const submissionData = {
         ...formData,
         email: formData.email === "" ? null : formData.email,
-        role: formData.role === "" ? "user" : formData.role 
+        role: formData.role === "" ? "employee" : formData.role
 
 
     };
@@ -90,7 +91,7 @@ const AddEmployeesPage = () => {
           hireDate: "",
           status: "activo",
           pwd: "",
-          role: "user",
+          role: "employee",
         });
        
       } catch (err) {
@@ -107,6 +108,7 @@ const AddEmployeesPage = () => {
   return (
     
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+      <BackButton />
       <div className="bg-white shadow-lg rounded-lg w-full max-w-4xl p-8">
         <h2 className="text-2xl font-bold mb-6">Añadir Nuevo Empleado</h2>
         {successMessage && <p className="text-green-500 mb-4">{successMessage}</p>}
@@ -259,7 +261,7 @@ const AddEmployeesPage = () => {
                     Selecciona un rol
                   </option>
                   <option value="admin">Administrador</option>
-                  <option value="user">Usuario</option>
+                  <option value="employee">Usuario</option>
                 </select>
               </div>
 

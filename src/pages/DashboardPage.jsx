@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Sidebar from "../components/Sidebar";
+import BackButton from "../components/BackButton";
 import AttendanceList from "../components/AttendanceList";
 
 import RegisterButton from "../components/RegisterButton";
@@ -35,7 +36,10 @@ const DashboardPage = () => {
       <div className="flex flex-col flex-1">
         {/* Header */}
         <div className="flex justify-between items-center p-4 bg-gymmania-panel shadow-md">
-          <h1 className="font-jaro text-3xl hidden lg:block">¡Gym Mania!</h1>
+          <div className="flex items-center gap-3">
+            <BackButton className="" />
+            <h1 className="font-jaro text-3xl hidden lg:block">¡Gym Mania!</h1>
+          </div>
           <div className="absolute left-1/2 transform -translate-x-1/2">
             <span className="font-jaro text-4xl text-black">
               Control de asistencias

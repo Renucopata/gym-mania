@@ -2,3 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Brand/display text: render the Orbitron `font-jaro` class as a bold, slanted
+   (synthesized italic) face to approximate Ethnocentric Bold Italic. Placed
+   after @tailwind utilities so it overrides weight/style on those elements. */
+.font-jaro {
+  font-weight: 700;
+  font-style: italic;
+}
+

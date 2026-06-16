@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import axiosInstance from "../utils/AxiosInstance";
+import BackButton from "../components/BackButton";
 import AddClientModal from "../components/AddClientModal";
 import ClientsDetailModal from "../components/ClientsDetailModal";
 import EditClient from "../components/EdtiClient";
@@ -10,10 +11,10 @@ const ClientsPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [clients, setClients] = useState([]);
+  const [memberships, setMemberships] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedClient, setSelectedClient] = useState(null); // To store the client to display
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false); // To control the modal visibility
-  const [searchedClients, setSearchedClients] = useState([]);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
@@ -37,30 +38,46 @@ const ClientsPage = () => {
   };
   const closeDelete = () => setIsDeleteOpen(false);
 
-  // Fetch clients from API
+  // Fetch clients and memberships from API
   useEffect(() => {
-    const fetchClients = async () => {
+    const fetchData = async () => {
       try {
-        const response = await axiosInstance.get("/clients/getAll");
-        setClients(response.data.data);
+        const [clientsRes, membershipsRes] = await Promise.all([
+          axiosInstance.get("/clients/getAll"),
+          axiosInstance.get("/memberships/getAll"),
+        ]);
+        setClients(clientsRes.data.data);
+        setMemberships(membershipsRes.data.data);
       } catch (error) {
-        console.error("Error fetching clients:", error);
+        console.error("Error fetching clients/memberships:", error);
       }
     };
 
-    fetchClients();
+    fetchData();
   }, []);
 
+  // Reset to the first page whenever the search query or tab changes.
   useEffect(() => {
-    const query = searchQuery.toLowerCase();
-    const filtered = clients.filter(
-      (client) =>
-        client.carnet_identidad.toString().includes(query) || // Search by ID
-        client.apellido.toLowerCase().includes(query) // Search by Last Name
-    );
-    setSearchedClients(filtered);
-    setCurrentPage(1); // Reset to the first page whenever the search query changes
-  }, [searchQuery, clients]);
+    setCurrentPage(1);
+  }, [searchQuery, activeTab]);
+
+  // A client is "active" when they currently have a membership whose date
+  // range includes today. This is computed, never stored (no DB change).
+  const activeClientIds = useMemo(() => {
+    const todayStr = new Date().toLocaleDateString("en-CA"); // YYYY-MM-DD (local)
+    const ids = new Set();
+    memberships.forEach((m) => {
+      const start = String(m.fecha_inicio).slice(0, 10);
+      const end = String(m.fecha_fin).slice(0, 10);
+      if (start <= todayStr && todayStr <= end) {
+        ids.add(String(m.carnet_identidad_cliente));
+      }
+    });
+    return ids;
+  }, [memberships]);
+
+  const isClientActive = (client) =>
+    activeClientIds.has(String(client.carnet_identidad));
 
 
   const openDetailsModal = (id) => {
@@ -74,21 +91,31 @@ const ClientsPage = () => {
   };
 
 
-  // Filter clients based on active tab
+  // Combined tab + search filter. Tabs use the computed membership status.
   const filteredClients = clients.filter((client) => {
-    if (activeTab === "active") return client.estado === "activo";
-    if (activeTab === "expired") return client.estado !== "activo";
-    return true; // "all" tab
+    if (activeTab === "active" && !isClientActive(client)) return false;
+    if (activeTab === "expired" && isClientActive(client)) return false;
+
+    const query = searchQuery.toLowerCase();
+    if (query) {
+      const matches =
+        client.carnet_identidad.toString().toLowerCase().includes(query) ||
+        client.apellido.toLowerCase().includes(query) ||
+        client.nombre.toLowerCase().includes(query);
+      if (!matches) return false;
+    }
+    return true;
   });
 
   // Pagination logic
-  const paginatedClients = searchedClients.slice(
+  const paginatedClients = filteredClients.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
 
   return (
     <div className="min-h-screen bg-gray-100 flex justify-center items-center">
+      <BackButton />
       <div className="w-[90vw] h-[90vh] bg-gymmania-panel shadow-lg rounded-lg p-3">
         <div className="p-4">
           {/* Breadcrumbs */}
@@ -163,7 +190,17 @@ const ClientsPage = () => {
               <td className="p-2 border-b">{client.carnet_identidad}</td>
               <td className="p-2 border-b">{client.nombre}</td>
               <td className="p-2 border-b">{client.apellido}</td>
-              <td className="p-2 border-b">{client.estado}</td>
+              <td className="p-2 border-b">
+                <span
+                  className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                    isClientActive(client)
+                      ? "bg-green-100 text-green-800"
+                      : "bg-red-100 text-red-800"
+                  }`}
+                >
+                  {isClientActive(client) ? "activo" : "inactivo"}
+                </span>
+              </td>
               <td className="p-2 border-b">
                 {new Date(client.created_at).toLocaleDateString('es-ES', {
                   day: '2-digit',

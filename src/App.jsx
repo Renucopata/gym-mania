@@ -31,7 +31,7 @@ const App = () => {
           <Route
             path="/addEmployees"
             element={
-              <AuthGuard>
+              <AuthGuard roles={["admin"]}>
                 <AddEmployeesPage />
               </AuthGuard>
             }

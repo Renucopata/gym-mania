@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import BackButton from "../components/BackButton";
 
 const machineData = [
   {
@@ -43,6 +44,7 @@ const MachinesPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 flex justify-center items-center">
+      <BackButton />
       <div className="w-[90vw] h-[90vh] bg-gymmania-panel shadow-lg rounded-lg p-6">
         {/* Breadcrumbs */}
         <div className="font-jaro text-md text-black mb-4">
