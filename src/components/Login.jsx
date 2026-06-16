@@ -30,7 +30,7 @@ export default function Login() {
 
     try {
       // Send login request to backend
-      const response = await axios.post("https://smash-gym-server-rrsoft.vercel.app/api/auth/login", {
+      const response = await axios.post("https://gym-mania-server.vercel.app/api/auth/login", {
         user: credentials.user,
         password: credentials.password,
       });
