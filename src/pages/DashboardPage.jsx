@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Sidebar from "../components/Sidebar";
-import BackButton from "../components/BackButton";
 import AttendanceList from "../components/AttendanceList";
 
 import RegisterButton from "../components/RegisterButton";
@@ -10,6 +9,7 @@ const DashboardPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [SideBarOpen, setSideBarOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState(""); // Add searchQuery state
+  const [attendanceRefresh, setAttendanceRefresh] = useState(0); // bump to refetch list
 
   function toggleNavMenu() {
     setSideBarOpen(!SideBarOpen);
@@ -36,10 +36,7 @@ const DashboardPage = () => {
       <div className="flex flex-col flex-1">
         {/* Header */}
         <div className="flex justify-between items-center p-4 bg-gymmania-panel shadow-md">
-          <div className="flex items-center gap-3">
-            <BackButton className="" />
-            <h1 className="font-jaro text-3xl hidden lg:block">¡Gym Mania!</h1>
-          </div>
+          <h1 className="font-jaro text-3xl hidden lg:block">¡Gym Mania!</h1>
           <div className="absolute left-1/2 transform -translate-x-1/2">
             <span className="font-jaro text-4xl text-black">
               Control de asistencias
@@ -57,13 +54,18 @@ const DashboardPage = () => {
         {/* Content Area */}
         <div className="flex flex-1 p-4 relative">
           {/* Pass searchQuery to AttendanceList */}
-          <AttendanceList searchQuery={searchQuery} />
+          <AttendanceList searchQuery={searchQuery} refreshTrigger={attendanceRefresh} />
 
           {/* Register Button */}
           <RegisterButton onClick={() => setIsModalOpen(true)} />
 
           {/* Register Modal */}
-          {isModalOpen && <RegisterModal onClose={() => setIsModalOpen(false)} />}
+          {isModalOpen && (
+            <RegisterModal
+              onClose={() => setIsModalOpen(false)}
+              onRegistered={() => setAttendanceRefresh((n) => n + 1)}
+            />
+          )}
         </div>
       </div>
     </div>

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axiosInstance from "../utils/AxiosInstance";
 
-export default function RegisterModal({ onClose }) {
+export default function RegisterModal({ onClose, onRegistered }) {
   const [ci, setCi] = useState("");
   const [huella, setHuella] = useState("");
   const [error, setError] = useState("");
@@ -29,6 +29,7 @@ export default function RegisterModal({ onClose }) {
 
       const response = await axiosInstance.post("/attendances/register", data);
       setSuccess(response.data.message); // Show success message
+      if (onRegistered) onRegistered();
       setCi("");
       setHuella("");
     } catch (err) {

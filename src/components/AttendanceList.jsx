@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axiosInstance from "../utils/AxiosInstance"; // Import your axios instance
 
-export default function AttendanceList({ searchQuery }) {
+export default function AttendanceList({ searchQuery, refreshTrigger }) {
   const [attendances, setAttendances] = useState([]);
   const [error, setError] = useState(null);
 
@@ -16,7 +16,7 @@ export default function AttendanceList({ searchQuery }) {
       }
     };
     fetchAttendances();
-  }, []);
+  }, [refreshTrigger]);
 
   // Filter attendances based on searchQuery
   const filteredAttendances = attendances.filter((attendance) =>

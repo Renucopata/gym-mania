@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axiosInstance from '../utils/AxiosInstance';
 
-export default function AddClientModal({ onClose }) {
+export default function AddClientModal({ onClose, onAdded }) {
     const [formData, setFormData] = useState({
         ci: "",
         name: "",
@@ -104,6 +104,7 @@ export default function AddClientModal({ onClose }) {
             const response = await axiosInstance.post("/clients/addNew", submissionData);
 
             setSuccess(response.data.message);
+            if (onAdded) onAdded();
             setTimeout(() => {
                 onClose();
             }, 2000);

@@ -1,7 +1,7 @@
 import React, { useState} from "react";
 import axiosInstance from '../utils/AxiosInstance';
 
-export default function AddMemberModal({onClose, onAdd}) {
+export default function AddMemberModal({onClose, onAdded}) {
     const [formData, setFormData] = useState({
         ci: "",
         start: "",
@@ -158,6 +158,7 @@ export default function AddMemberModal({onClose, onAdd}) {
             const response = await axiosInstance.post("/memberships/addNew", submissionData);
 
             setSuccess(response.data.message);
+            if (onAdded) onAdded();
             setTimeout(() => {
                 onClose(); // code to run after delay
               }, 2500);

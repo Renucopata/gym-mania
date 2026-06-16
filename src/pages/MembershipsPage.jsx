@@ -22,17 +22,17 @@ const MembershipsPage = () => {
   const itemsPerPage = 100;
 
   // Fetch memberships from the API
+  const fetchMemberships = async () => {
+    try {
+      const response = await axiosInstance.get("/memberships/getAll");
+      setMemberships(response.data.data); // Save the memberships data in state
+    } catch (err) {
+      console.error("Error fetching memberships:", err);
+      setError("No se pudo obtener la lista de membresías. Inténtalo más tarde.");
+    }
+  };
+
   useEffect(() => {
-    const fetchMemberships = async () => {
-      try {
-        const response = await axiosInstance.get("/memberships/getAll");
-        setMemberships(response.data.data); // Save the memberships data in state
-      } catch (err) {
-        console.error("Error fetching memberships:", err);
-        setError("No se pudo obtener la lista de membresías. Inténtalo más tarde.");
-      }
-    };
-  
     fetchMemberships();
   }, []);
 
@@ -186,11 +186,7 @@ const MembershipsPage = () => {
       {isModalOpen && (
         <AddMemberModal
           onClose={handleModalClose}
-          onAdd={(newMembership) => setMemberships([newMembership, ...memberships])}
-          onSuccess={(message) => {
-            setSuccessMessage(message);
-            // Optionally: show a toast or other notification
-          }}
+          onAdded={fetchMemberships}
         />
       )}
       {isDetailsModalOpen && (

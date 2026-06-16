@@ -39,20 +39,20 @@ const ClientsPage = () => {
   const closeDelete = () => setIsDeleteOpen(false);
 
   // Fetch clients and memberships from API
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [clientsRes, membershipsRes] = await Promise.all([
-          axiosInstance.get("/clients/getAll"),
-          axiosInstance.get("/memberships/getAll"),
-        ]);
-        setClients(clientsRes.data.data);
-        setMemberships(membershipsRes.data.data);
-      } catch (error) {
-        console.error("Error fetching clients/memberships:", error);
-      }
-    };
+  const fetchData = async () => {
+    try {
+      const [clientsRes, membershipsRes] = await Promise.all([
+        axiosInstance.get("/clients/getAll"),
+        axiosInstance.get("/memberships/getAll"),
+      ]);
+      setClients(clientsRes.data.data);
+      setMemberships(membershipsRes.data.data);
+    } catch (error) {
+      console.error("Error fetching clients/memberships:", error);
+    }
+  };
 
+  useEffect(() => {
     fetchData();
   }, []);
 
@@ -261,6 +261,7 @@ const ClientsPage = () => {
       {isModalOpen && (
         <AddClientModal
         onClose={closeModal}
+        onAdded={fetchData}
         />
       )}
               {isDetailsModalOpen && (
