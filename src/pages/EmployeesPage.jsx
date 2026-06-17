@@ -187,7 +187,7 @@ const EmployeesPage = () => {
 
         {/* Employee List */}
         <div className="bg-white shadow-md rounded-lg p-4">
-        <div className="h-[400px] overflow-y-auto">
+        <div className="h-[400px] overflow-auto">
           <table className="w-full text-left border-collapse">
             <thead>
               <tr>

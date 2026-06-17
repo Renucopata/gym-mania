@@ -69,15 +69,15 @@ export default function EditClient({ clientId, onClose }) {
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
+      className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4"
       onClick={onClose}
     >
       <div
-        className="bg-white p-6 rounded-lg shadow-lg max-w-4xl w-full flex"
+        className="bg-white p-6 rounded-lg shadow-lg max-w-4xl w-full flex flex-col md:flex-row max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Photo Section */}
-        <div className="w-1/3 flex flex-col items-center">
+        <div className="w-full md:w-1/3 flex flex-col items-center">
           {clientPhoto ? (
             <img
               src={clientPhoto}
@@ -93,7 +93,7 @@ export default function EditClient({ clientId, onClose }) {
         </div>
 
         {/* Client Info Section */}
-        <div className="w-2/3 pl-6">
+        <div className="w-full md:w-2/3 md:pl-6">
           <h2 className="text-2xl font-bold mb-4">Detalles del Cliente</h2>
           <table className="w-full text-left">
             <tbody>

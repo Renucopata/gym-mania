@@ -3,6 +3,7 @@ import BackButton from "../components/BackButton";
 import axiosInstance from "../utils/AxiosInstance";
 import AddMemberModal from "../components/AddMemberModal";
 import MembershipsDetailsModal from "../components/MembershipsDetailModal";
+import EditMembership from "../components/EditMembership";
 import DeleteMembership from "../components/DeleteMembership";
 
 
@@ -63,8 +64,15 @@ const MembershipsPage = () => {
     setSelectedClient(id);
     setIsDeleteOpen(true);
   }
- 
+
   const closeDelete = () => {setIsDeleteOpen(false)};
+
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const openEdit = (id) => {
+    setSelectedClient(id);
+    setIsEditOpen(true);
+  };
+  const closeEdit = () => setIsEditOpen(false);
 
   // Paginate memberships
   const paginatedData = searchedMemberships.slice(
@@ -98,7 +106,7 @@ const MembershipsPage = () => {
 
         {/* Memberships List */}
         <div className="bg-white shadow-md rounded-lg p-4">
-          <div className="h-[400px] overflow-y-auto">
+          <div className="h-[400px] overflow-auto">
           {error ? (
             <p className="text-red-600 font-medium mb-4">{error}</p>
           ) : memberships.length > 0 ? (
@@ -149,6 +157,13 @@ const MembershipsPage = () => {
                           <i class="fa-solid fa-circle-info"></i>
                         </button>
 
+                        <button
+                          onClick={() => openEdit(membership.id)}
+                          className="mr-2 hover:text-gray-400"
+                        >
+                          <i class="fa-solid fa-pen-to-square"></i>
+                        </button>
+
                         {(userRole === "admin" || userRole === "sistemas")&&(<button
                           onClick={() => openDelete(membership.id)}
                           className="mr-2 hover:text-gray-400"
@@ -193,6 +208,13 @@ const MembershipsPage = () => {
         <MembershipsDetailsModal
           membershipId={selectedClient}
           onClose={closeDetailsModal}
+        />
+      )}
+      {isEditOpen && (
+        <EditMembership
+          membershipId={selectedClient}
+          onClose={closeEdit}
+          onUpdated={fetchMemberships}
         />
       )}
       {isDeleteOpen && (

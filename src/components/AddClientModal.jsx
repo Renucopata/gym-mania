@@ -121,11 +121,11 @@ export default function AddClientModal({ onClose, onAdded }) {
 
     return (
         <div
-            className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
+            className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4"
             onClick={onClose}
         >
             <div
-                className="bg-white p-8 rounded shadow-lg w-[800px] max-h-[90vh] overflow-y-auto"
+                className="bg-white p-6 sm:p-8 rounded shadow-lg w-full max-w-[800px] max-h-[90vh] overflow-y-auto"
                 onClick={(e) => e.stopPropagation()}
             >
                 <h2 className="text-2xl font-bold mb-6">Añadir Cliente</h2>
@@ -136,7 +136,7 @@ export default function AddClientModal({ onClose, onAdded }) {
                 )}
                 {success && <p className="text-green-500 mb-4">{success}</p>}
                 <form onSubmit={handleSubmit}>
-                    <div className="grid grid-cols-2 gap-x-6 gap-y-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
                         {Object.entries(fieldConfig).map(([key, config]) => (
                             <div key={key} className="mb-2">
                                 <label className="block mb-2 font-medium text-gray-700">
