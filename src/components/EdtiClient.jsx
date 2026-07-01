@@ -1,6 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import axiosInstance from "../utils/AxiosInstance";
 
+// Fields that the backend never accepts on the generic update endpoint
+// (PK, DB-managed timestamps, or fields with their own dedicated endpoint).
+const NON_EDITABLE_FIELDS = [
+  "carnet_identidad",
+  "created_at",
+  "updated_at",
+  "dia_prueba_usado",
+];
+
 export default function EditClient({ clientId, onClose }) {
   const [clientData, setClientData] = useState(null);
   const [clientPhoto, setClientPhoto] = useState(null);
@@ -50,9 +59,14 @@ export default function EditClient({ clientId, onClose }) {
   const saveChanges = async () => {
     setIsSaving(true);
     try {
+      const updates = Object.fromEntries(
+        Object.entries(clientData).filter(
+          ([key]) => !NON_EDITABLE_FIELDS.includes(key)
+        )
+      );
       const response = await axiosInstance.put(
         `/clients/update/${clientId}`,
-        clientData
+        updates
       );
       alert(response.data.message || "Datos actualizados exitosamente.");
       onClose(); // Optionally close the modal after saving
@@ -97,19 +111,23 @@ export default function EditClient({ clientId, onClose }) {
           <h2 className="text-2xl font-bold mb-4">Detalles del Cliente</h2>
           <table className="w-full text-left">
             <tbody>
-              {Object.keys(clientData).map((key) => (
-                <tr key={key}>
-                  <td className="font-bold pr-4 py-2">{key.replace(/_/g, " ")}:</td>
-                  <td>
-                    <input
-                      type="text"
-                      value={clientData[key] || ""}
-                      onChange={(e) => handleInputChange(key, e.target.value)}
-                      className="border border-gray-300 rounded px-2 py-1 w-full"
-                    />
-                  </td>
-                </tr>
-              ))}
+              {Object.keys(clientData).map((key) => {
+                const readOnly = NON_EDITABLE_FIELDS.includes(key);
+                return (
+                  <tr key={key}>
+                    <td className="font-bold pr-4 py-2">{key.replace(/_/g, " ")}:</td>
+                    <td>
+                      <input
+                        type="text"
+                        value={clientData[key] || ""}
+                        onChange={(e) => handleInputChange(key, e.target.value)}
+                        disabled={readOnly}
+                        className="border border-gray-300 rounded px-2 py-1 w-full disabled:bg-gray-100 disabled:text-gray-500"
+                      />
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
           <div className="mt-4 flex justify-between">
